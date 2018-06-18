@@ -1,3 +1,4 @@
+examples/rehiring/resources/public/files/temp
 **/.DS_Store
 **/.idea/**/*
 !.idea/codeStyleSettings.xml
