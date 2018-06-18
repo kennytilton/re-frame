@@ -3,7 +3,7 @@
     [goog.string :as gs]
     [reagent.core :as rgt]
     [re-frame.core :refer [reg-sub subscribe] :as rfr]
-    [rehiring.utility :refer [<sub] :as utl]))
+    [rehiring.utility :refer [<sub >evt target-val] :as utl]))
 
 
 ;;; --- utilities -----------------------------------
@@ -71,7 +71,7 @@
                             :on-click (fn [e]
                                         #_(println :bamchg-stars
                                             sn (.-checked (.-target e)))
-                                        (rfr/dispatch [:unotes-prop-set (:hn-id job) :stars
+                                        (>evt [:unotes-prop-set (:hn-id job) :stars
                                                        (if (= sn (dec j-stars))
                                                          0 (inc sn))]))}
                      (utl/unesc "&#x2605;")]))]))
@@ -84,8 +84,7 @@
                 :type      "checkbox"
                 :style     {:margin-left "18px"}
                 :checked   (<sub [:unotes-prop (:hn-id job) :applied])
-                :on-change #(do                             ;;(println :applied-change!!!!! (.-value (.-target %)))
-                              (rfr/dispatch [:unotes-prop-toggle (:hn-id job) :applied]))
+                :on-change #(>evt [:unotes-prop-toggle (:hn-id job) :applied])
                 }]
        [:label {:for   input-id
                 :style {:color (if (<sub [:unotes-prop (:hn-id job) :applied])
@@ -99,12 +98,12 @@
                          :font-size   "1em"
                          :font-weight (if excluded? "bolder" "lighter")
                          :margin      "4px 4px 8px 0"}
-              :on-click #(rfr/dispatch [:unotes-prop-toggle (:hn-id job) :excluded])}
+              :on-click #(>evt [:unotes-prop-toggle (:hn-id job) :excluded])}
        (utl/unesc "&#x20E0;")])))
 
 (defn note-editor [job]
   (let [set-notes (fn [e]
-                    (rfr/dispatch [:unotes-prop-set (:hn-id job) :notes (.-value (.-target e))]))]
+                    (>evt [:unotes-prop-set (:hn-id job) :notes (target-val e)]))]
     (fn [job]
       [:textarea {:style        {:padding "8px"
                                  :margin  "0 12px 0 12px"
@@ -126,7 +125,7 @@
                          :margin-left "18px"
                          :color       (if (pos? (count notes)) "red" "black")}
               :title    "Show/hide editor for your own notes"
-              :on-click #(rfr/dispatch [:unotes-prop-toggle (:hn-id job) :note-editing])}
+              :on-click #(>evt [:unotes-prop-toggle (:hn-id job) :note-editing])}
        "Notes"])))
 
 ;;; --- main ------------------------------------------------------

@@ -1,5 +1,5 @@
 (ns rehiring.filtering
-  (:require [rehiring.utility :as utl]
+  (:require [rehiring.utility :refer [>evt] :as utl]
             [rehiring.events :as evt]
             [re-frame.core :refer [subscribe reg-sub] :as rfr]
             [re-frame.core :as re-frame]))
@@ -72,7 +72,7 @@
                                           :type         "checkbox"
                                           :defaultValue false
                                           :on-change    (fn [e]
-                                                          (rfr/dispatch [:filter-activate tag (.-checked (.-target e))]))}]
+                                                          (>evt [:filter-activate tag (.-checked (.-target e))]))}]
                                  [:label {:for   (str tag "ID")
                                           :title desc}
                                   tag]])

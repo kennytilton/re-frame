@@ -1,6 +1,6 @@
 (ns rehiring.control-panel
   (:require [rehiring.filtering :as flt]
-            [rehiring.utility :refer [<sub] :as utl]
+            [rehiring.utility :refer [<sub >evt target-val] :as utl]
             [rehiring.job-listing-control-bar :as jlcb]
             [re-frame.core :as rfr]
             [rehiring.regex-search :as rgx]))
@@ -16,8 +16,8 @@
         :selected (= jsort curr-sort)
         :on-click (fn []
                     (if (= title (:title curr-sort))
-                      (rfr/dispatch [:job-sort-set (update curr-sort :order #(* -1 %))])
-                      (rfr/dispatch [:job-sort-set jsort])))}
+                      (>evt [:job-sort-set (update curr-sort :order #(* -1 %))])
+                      (>evt [:job-sort-set jsort])))}
        (str (:title jsort) (if (= title (:title curr-sort))
                              (if (= (:order curr-sort) -1)
                                (utl/unesc "&#x2798") (utl/unesc "&#x279a"))))])))

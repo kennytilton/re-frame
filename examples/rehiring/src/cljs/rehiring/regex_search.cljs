@@ -1,7 +1,7 @@
 (ns rehiring.regex-search
   (:require [cljs.pprint :as pp]
             [re-frame.core :refer [subscribe] :as rfr]
-            [rehiring.utility :refer [<sub] :as utl]
+            [rehiring.utility :refer [<sub >evt target-val] :as utl]
             [reagent.core :as rgt]
             [clojure.string :as str]))
 
@@ -16,7 +16,7 @@
               :type      "checkbox"
               :value     (<sub [:toggle-key :rgx-match-case])
               :on-change (fn [e]
-                           (rfr/dispatch [:toggle-key :rgx-match-case]))}]
+                           (>evt [:toggle-key :rgx-match-case]))}]
      [:label {:for "rgxMatchCase"}
       "match case"]]))
 
@@ -33,7 +33,7 @@
               :checked   (<sub [:toggle-key :rgx-xlate-or-and])
               :title     "Replace 'or/and' with '||/&&' for easier mobile entry."
               :on-change (fn [e]
-                           (rfr/dispatch [:toggle-key :rgx-xlate-or-and]))}]
+                           (>evt [:toggle-key :rgx-xlate-or-and]))}]
      [:label {:for "rgxOrAnd"}
       "allow or/and"]]))
 
@@ -75,11 +75,11 @@
    [:input {:placeholder  (pp/cl-format nil "Regex for ~a search" desc)
             :list         (str prop "list")
             :on-key-press #(when (= "Enter" (js->clj (.-key %)))
-                             (rfr/dispatch [:rgx-unparsed-set prop (str/trim (.-value (.-target %)))]))
+                             (>evt [:rgx-unparsed-set prop (str/trim (target-val %))]))
 
-            :on-blur      #(let [rgx-raw (str/trim (.-value (.-target %)))]
+            :on-blur      #(let [rgx-raw (str/trim (target-val %))]
                              #_ (println :rgx!!!!!!!! prop rgx-raw)
-                             (rfr/dispatch [:rgx-unparsed-set prop rgx-raw]))
+                             (>evt [:rgx-unparsed-set prop rgx-raw]))
 
             :on-focus     #(.setSelectionRange (.-target %) 0 999)
             ;;:value        (if (= prop :title) "crowd,q" "")

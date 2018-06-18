@@ -6,7 +6,7 @@
     [re-frame.core
      :refer [subscribe reg-sub dispatch reg-event-db reg-event-fx]
      :as rfr]
-    [rehiring.utility :refer [<sub] :as utl]
+    [rehiring.utility :refer [<sub >evt target-val] :as utl]
     [rehiring.job-parse :as parse]))
 
 (defn gMonthlies-cljs
@@ -62,9 +62,6 @@
      :jobs                 []}))
 
 ;;; --- subscriptions -------------------------------------------------------
-(rfr/reg-sub :month-load-prop
-  (fn [db [_ prop]]
-    (get-in db [:month-load-task prop])))
 
 (rfr/reg-sub :month-phase
   (fn [db]
@@ -145,7 +142,9 @@
   -- The work is broken up into steps, doing one step (here, scraping
   one page), and then kicking off the next step by dispatching a continuing event;
 
-  -- pass around a map steadily updated with the changing state of the page load;
+  -- pass around a single map completely describing a task (here the loading
+     of a month of pages of jobs) that is steadily updated with the changing
+     state of the page load;
 
   -- in the events, assoc the task map into the db so the views change; and
 

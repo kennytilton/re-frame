@@ -1,6 +1,6 @@
 (ns rehiring.job-listing-control-bar
   (:require [re-frame.core :refer [subscribe] :as rfr]
-            [rehiring.utility :refer [<sub] :as utl]))
+            [rehiring.utility :refer [<sub >evt target-val] :as utl]))
 
 ;;; --- sub-components ---------------------------------------
 
@@ -11,7 +11,7 @@
                            :min-width "128px"
                            ;; display after jobs loaded todo
                            }
-                :on-click #(rfr/dispatch [:toggle-details-visibility-all mo-jobs])}
+                :on-click #(>evt [:toggle-details-visibility-all mo-jobs])}
        (case (<sub [:toggle-details-action])
          "collapse" "Collapse all"
          "expand" "Expand all"
@@ -29,7 +29,7 @@
                          :border         (if (<sub [:show-filtered-excluded])
                                            "thin solid red" "none")
                          :title          "Show/hide items you have excluded"}
-              :on-click #(rfr/dispatch [:show-filtered-excluded-toggle])
+              :on-click #(>evt [:show-filtered-excluded-toggle])
               }
        (str (utl/unesc "&#x20E0;") ": " excluded-ct)])))
 
@@ -42,11 +42,11 @@
                 :defaultValue rmax
 
                 :on-key-press #(when (= "Enter" (js->clj (.-key %)))
-                                 (rfr/dispatch [:set-result-display-max (js/parseInt (.-value (.-target %)))]))
+                                 (>evt [:set-result-display-max (js/parseInt (target-val %))]))
 
-                :on-blur      #(let [new (.-value (.-target %))]
+                :on-blur      #(let [new (target-val %)]
                                  #_(println "blur new" new (js/parseInt new))
-                                 (rfr/dispatch [:set-result-display-max (js/parseInt new)]))
+                                 (>evt [:set-result-display-max (js/parseInt new)]))
 
                 :style        {:font-size    "1em"
                                :max-width    "48px"

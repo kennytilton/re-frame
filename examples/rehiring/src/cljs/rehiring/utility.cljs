@@ -5,6 +5,7 @@
     [clojure.string :as str]))
 
 (def <sub  (comp deref re-frame.core/subscribe))
+(def >evt re-frame.core/dispatch)
 
 ;;; --- clojure++ ---------------------------------
 
@@ -131,7 +132,7 @@
                                        :font-family "Arial"
                                        :font-size   "1em"} style)
                      :title    title
-                     :on-click #(rfr/dispatch [:toggle-key db-key])}
+                     :on-click #(>evt [:toggle-key db-key])}
                attrs)
        (unesc (if on-off on-char off-char))])))
 

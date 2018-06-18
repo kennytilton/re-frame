@@ -1,6 +1,6 @@
 (ns rehiring.month-loader-views
   (:require [rehiring.month-loader :as loader]
-            [rehiring.utility :refer [<sub] :as utl]
+            [rehiring.utility :refer [<sub >evt target-val] :as utl]
             [re-frame.core
              :refer [subscribe reg-sub dispatch reg-event-db reg-event-fx]
              :as rfr]

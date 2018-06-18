@@ -5,7 +5,7 @@
             [rehiring.user-annotations :as unt]
             [goog.string :as gs]
             [cljs.pprint :as pp]
-            [rehiring.utility :refer [<sub] :as utl]))
+            [rehiring.utility :refer [<sub >evt target-val] :as utl]))
 
 (declare job-header job-details)
 
@@ -73,14 +73,14 @@
   (fn [job]
     [:div {:style    {:cursor  "pointer"
                       :display "flex"}
-           :on-click #(rfr/dispatch [::evt/toggle-show-job-details (:hn-id job)])}
+           :on-click #(>evt [::evt/toggle-show-job-details (:hn-id job)])}
      [:span {:style {:color        "gray"
                      :max-height   "16px"
                      :margin-right "9px"
                      :display      "block"}}
       (utl/unesc "&#x2b51")]
      [:span {
-             ;;:on-click #(rfr/dispatch [::evt/toggle-show-job-details (:hn-id job)])
+             ;;:on-click #(>evt [::evt/toggle-show-job-details (:hn-id job)])
              }
       (:title-search job)]]))
 
