@@ -79,8 +79,5 @@
                      :margin-right "9px"
                      :display      "block"}}
       (utl/unesc "&#x2b51")]
-     [:span {
-             ;;:on-click #(>evt [::evt/toggle-show-job-details (:hn-id job)])
-             }
-      (:title-search job)]]))
+     [:span (:title-search job)]]))
 
