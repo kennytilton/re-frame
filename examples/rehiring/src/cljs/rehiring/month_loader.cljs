@@ -53,8 +53,7 @@
 
   (let [urls (month-page-urls month-hn-id)]
     {:month-hn-id          month-hn-id
-     :phase                :cull-athings                    ;; ...or :parse-jobs
-     :month-load-complete? false
+     :phase                :cull-athings                    ;; ... :parse-jobs, :fini
      :page-url-count       (count urls)
      :page-urls-remaining  urls
      :jobs-seen            #{}
@@ -157,7 +156,7 @@
   (fn [task]
     (assert (first (:page-urls-remaining task)))
     [:iframe {:src     (first (:page-urls-remaining task))
-              :on-load #(dispatch
+              :on-load #(>evt
                           ^:flush-dom [:page-athings-culled
                                        (utl/update-multi task
                                          [:page-urls-remaining rest]
@@ -224,6 +223,6 @@
            })
 
         ;; all athings have been processes...
-        {:db (assoc-in db [:month-load-task :month-load-complete?] true)}))))
+        {:db (assoc-in db [:month-load-task :phase] :fini)}))))
 
 
