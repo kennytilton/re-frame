@@ -58,7 +58,7 @@
 
 (defn job-listing-control-bar []
   (fn []
-    [:div {:class "listingControlBar"}
+    [:div.listingControlBar
      [:div {:style utl/hz-flex-wrap-centered}
       ;;; --- match count---------------------------------------------------
       [:span {:style {:font-size    "1em"

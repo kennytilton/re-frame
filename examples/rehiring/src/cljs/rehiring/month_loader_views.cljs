@@ -13,9 +13,10 @@
   ; driven by the :month-hn-id subscription. See event-fx :rehiring.db/initialize-db
   ; for how we control which month loads on app start-up.
 
-  (into [:select {:class     "searchMonth"
-                  :value     (or (<sub [:month-hn-id]) "")
-                  :on-change #(>evt [:month-set (utl/target-val %)])}]
+  (into [:select.searchMonth
+         {
+          :value     (or (<sub [:month-hn-id]) "")
+          :on-change #(>evt [:month-set (utl/target-val %)])}]
     (map #(let [{:keys [hnId desc]} %]
             [:option {:value hnId} desc])
       (loader/gMonthlies-cljs))))
@@ -85,7 +86,7 @@
 ;;; select a month and watch it load
 
 (defn pick-a-month []
-  [:div {:class "pickAMonth"}
+  [:div.pickAMonth
    [month-selector]
 
    [:div {:style utl/hz-flex-wrap}

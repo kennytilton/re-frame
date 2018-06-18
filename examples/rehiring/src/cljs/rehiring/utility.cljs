@@ -136,17 +136,22 @@
                attrs)
        (unesc (if on-off on-char off-char))])))
 
+(defn slide-in-rule [in?]
+  (if in? "slideIn" "slideOut"))
+
 (defn open-shut-case [toggle-db-key title & cases]
   (fn []
     [:div
-     [:div {:class "selector"}
+     [:div.selector
       [:span title]
       [toggle-char toggle-db-key
        (str "Show/hide " title)
        "&#x25be", "&#x25b8" {} {}]]
 
-     [:div {:class "osBody"
+     [:div {:class (str "osBody " (slide-in-rule (<sub [:toggle-key toggle-db-key])))
             :style {:background "#ff6600"
-                    :display    (if (<sub [toggle-db-key]) "block" "none")}}
+                    :padding "6px"
+                    :display (if (<sub [:toggle-key toggle-db-key]) "block" "none")
+                    }}
       (for [case cases]
         ^{:key (rand-int 100000)} (case))]]))

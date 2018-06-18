@@ -135,7 +135,7 @@
   (fn [job]
     [:div {:style {:display        "flex"
                    :flex-direction "column"}}
-     [:div {:class "userAnnotations"}
+     [:div.userAnnotations
       [job-stars job]
       [applied job]
       [note-toggle job]
