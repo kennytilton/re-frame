@@ -38,9 +38,9 @@
       (throw (js/Exception. (str "msg id " month-hn-id " not defined in gMonthlies table."))))))
 
 (defn unprocessed-month
-  "This is the state we will use to track a multi-page
+  "This is the starting point of the state we will use to track a multi-page
   month load across two phases. Me start with this map and
-  then assoc/update away for the life of the load.
+  then assoc/update away at it for the life of the load.
 
   This, btw, is what we fell back on after internalizing that
   subscriptions are meant only for views and other subscriptions.
@@ -171,7 +171,7 @@
       ;; Here we make the phase transition from culling raw nodes
       ;; from HN pages to parsing those nodes identified as jobs,
       ;; triggering a second visual zero-to-completion with a
-      ;; new lable simply by altering the :phase property.
+      ;; new label simply by altering the :phase property.
       ;;
       ;; How does that work?
       ;;
@@ -196,7 +196,8 @@
     ;; Notice how first (take ATHING_CHUNK_SZ ...) then
     ;; (nthrest ATHING_CHUNK_SZ...) work together to treat
     ;; the :athings lazy sequence as a queue. Bigger chunk
-    ;; sizes go quite fast (I think I use 100 in the live site)
+    ;; sizes go quite fast (I think I use 100 in the live site),
+    ;; smaller chunks let us see the progress bar progressing.
 
     (let [task (:month-load-task db)
           chunk (take ATHING_CHUNK_SZ (get-in db [:month-load-task :athings]))]

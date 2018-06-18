@@ -1,6 +1,6 @@
 (ns rehiring.month-loader-views
   (:require [rehiring.month-loader :as loader]
-            [rehiring.utility :as utl]
+            [rehiring.utility :refer [<sub] :as utl]
             [re-frame.core
              :refer [subscribe reg-sub dispatch reg-event-db reg-event-fx]
              :as rfr]
@@ -15,23 +15,22 @@
   []
   (fn []
     (let [months (loader/gMonthlies-cljs)
-          mo-id (or @(subscribe [:month-hn-id]) "")]
+          mo-id (or (<sub [:month-hn-id]) "")]
+      ;; todo resurrect code with option to start with no month selected
       [:select {:class        "searchMonth"
                 :defaultValue mo-id
-                :on-change    #(dispatch [:month-set (.-value (.-target %))])}
+                :on-change    #(dispatch [:month-set (utl/target-val %)])}
        (let []
-         (map (fn [mno mo-def]
-                (let [{:keys [hnId desc] :as all} mo-def]
-                  ^{:key mno} [:option {:key hnId :value hnId} desc]))
-           (range)
+         (map #(let [{:keys [hnId desc] :as all} %]
+                 ^{:key hnId} [:option {:value hnId} desc])
            months))])))
 
 (defn hn-month-link
   "An HN icon <a> tag linking to the actual HN page."
   []
   (fn []
-    [utl/view-on-hn {}                                      ;; {:hidden (nil? @(subscribe [:month-hn-id]))}
-     (pp/cl-format nil "https://news.ycombinator.com/item?id=~a" @(subscribe [:month-hn-id]))]))
+    [utl/view-on-hn {}                                      ;; {:hidden (nil? (<sub [:month-hn-id]))}
+     (pp/cl-format nil "https://news.ycombinator.com/item?id=~a" (<sub [:month-hn-id]))]))
 
 (defn month-jobs-total
   "A simple <span> announcing the job total once the load is complete"
@@ -39,8 +38,8 @@
   (fn []
     [:span {:style  {:color  "#fcfcfc"
                      :margin "0 12px 0 12px"}
-            :hidden (not @(subscribe [:month-load-complete?]))}
-     (str "Total jobs: " (count @(subscribe [:month-jobs])))]))
+            :hidden (not (<sub [:month-load-complete?]))}
+     (str "Total jobs: " (count (<sub [:month-jobs])))]))
 
 ;;; -------------------------------------------------------------------
 ;;; --- The star of the show ------------------------------------------
@@ -60,8 +59,8 @@
 
   []
   (fn []
-    (let [[phase max progress] @(subscribe [:month-progress])
-          hide-me @(subscribe [:month-load-complete?])]
+    (let [[phase max progress] (<sub [:month-progress])
+          hide-me (<sub [:month-load-complete?])]
 
       [:div {:hidden hide-me}
        [:span (case phase
