@@ -1,0 +1,51 @@
+#!/bin/bash
+
+if [ ! $1 ]; then
+    echo "arg 1 hnId must be supplied"
+    exit
+fi
+
+
+echo "FYI: PWD is $PWD"
+
+if [ ! ${PWD##*/} = "rehiring" ]; then
+    echo "Wrong PWD $PWD? Just a sanity check. Hack the grab script if in a different parent dir."
+    exit
+fi
+
+MAX_P=6
+
+echo "Grabbing HN message $1 at URLs https://news.ycombinator.com/item?id=$1/p=1..$MAX_P"
+
+mkdir -p resources/public/files/temp/$1
+mkdir -p resources/public/files/backup/$1
+
+rm resources/public/files/temp/$1/*.*
+touch resources/public/files/temp/$1/hn.js
+
+while true
+do
+  rm resources/public/files/temp/$1/*.html
+  for ((x=1;x<=MAX_P;x++)); do
+        echo "curling px=$x"
+        curl  "https://news.ycombinator.com/item?id=$1&p=$x" > resources/public/files/temp/$1/$x.html
+        ./iframify resources/public/files/temp/$1/$x.html
+  done
+
+  rm -r resources/public/files/backup/$1
+  cp -r resources/public/files/$1 resources/public/files/backup/$1
+
+  rm -r resources/public/files/$1
+  cp -r resources/public/files/temp/$1 resources/public/files/$1
+
+  ls -al resources/public/files/$1
+
+  if [ ! -z "$2" ]; then
+    s=$(( 60*$2 ))
+   echo "sleeping $2 minutes"
+   sleep $s
+  else
+   break
+  fi
+
+done
