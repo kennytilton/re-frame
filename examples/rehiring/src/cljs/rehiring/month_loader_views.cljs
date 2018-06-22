@@ -53,7 +53,6 @@
 
   (fn []
     (let [[phase max progress] (<sub [:month-progress])]
-      (println :pase phase)
 
       [:div {:hidden (= phase :fini)}
        [:span

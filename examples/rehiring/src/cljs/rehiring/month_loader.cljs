@@ -118,7 +118,7 @@
 ;;; --- dev-time limits -----------------------------
 ;;; n.b.: these will be limits *per page*
 
-(def ATHING-PARSE-MAX 1000)
+(def ATHING-PARSE-MAX 20000)
 
 (defn job-page-athings
   "Pretty simple. All messages are dom nodes with class aThing. Grab those
@@ -186,7 +186,7 @@
       ;; page loader will kick off this event itself.
       {:db (assoc db :month-load-task task)})))
 
-(def ATHING_CHUNK_SZ 20)                                    ;; bigger chunks zoom due, so use small value to see progress bar working
+(def ATHING_CHUNK_SZ 100)                                    ;; bigger chunks zoom due, so use small value to see progress bar working
 
 (reg-event-fx :cull-jobs-from-athings
   (fn [{:keys [db]} [_]]

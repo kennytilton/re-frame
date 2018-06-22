@@ -27,7 +27,7 @@
         ;; pre-digest all nodes
         (swap! spec assoc :body [])                         ;; needed?
         (if (and (= 3 (.-nodeType c0))
-                 (< 1 (count (filter #{\|} (.-textContent c0)))))
+                 (pos?(count (filter #{\|} (.-textContent c0)))))
 
           (let [s (atom {:in-header true
                          :title-seg []})]
@@ -76,6 +76,8 @@
   marks :OK as true."
   [dom seen]
   (when-not (contains? seen (.-id dom))
+    (when (= "17205934" (.-id dom))
+      (prn :bam!!!!!!!!!! 17205934))
     (let [spec (atom {:hn-id (.-id dom)})]
       ;;; sometimes native dom functions return funky arrays. prim-seq converts those for CLJS
       (doseq [child (prim-seq (.-children dom))]

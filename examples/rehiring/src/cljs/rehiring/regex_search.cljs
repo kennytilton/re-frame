@@ -41,7 +41,7 @@
   ["Press <kbd style='background:cornsilk;font-size:1em'>Enter</kbd> or <kbd style='background:cornsilk;font-size:1em'>Tab</kbd> to activate, including after clearing."
    (str "Separate <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions'>JS RegExp-legal</a> terms with <b>||</b> or "
      "<b>&&</b> (higher priority) to combine expressions.")
-    "'Allow or/and' option treats those as ||/&& for easier mobile entry."
+   "'Allow or/and' option treats those as ||/&& for easier mobile entry."
    "Regex terms are split on comma and passed to <b>new RegExp(pattern,flags)</b>."
    "e.g. Enter <b>taipei,i</b> for case-insensitive search."])
 
@@ -78,7 +78,7 @@
                              (>evt [:rgx-unparsed-set prop (str/trim (target-val %))]))
 
             :on-blur      #(let [rgx-raw (str/trim (target-val %))]
-                             #_ (println :rgx!!!!!!!! prop rgx-raw)
+                             #_(println :rgx!!!!!!!! prop rgx-raw)
                              (>evt [:rgx-unparsed-set prop rgx-raw]))
 
             :on-focus     #(.setSelectionRange (.-target %) 0 999)
@@ -89,20 +89,18 @@
                            :height    "2em"}}]
    [:datalist {:id (str prop "list")}
     (let [hs (<sub [:search-history prop])]
-      #_ (println :prop-hs prop hs)
+      #_(println :prop-hs prop hs)
       (when hs
         (map (fn [hn h]
-               #_ (println :dlist!!!!!! h)
+               #_(println :dlist!!!!!! h)
                ^{:key hn} [:option {:value h}])
           (range)
           hs)))]])
 
 (rfr/reg-event-fx :rgx-unparsed-set
   (fn [{:keys [db]} [_ scope raw]]
-    (let [new-db (assoc-in db [:rgx-unparsed scope] raw)]
-      #_ (println :queueing :search-history-extend scope raw)
-      {:db       new-db
-       :dispatch [:search-history-extend scope raw]})))
+    {:db       (assoc-in db [:rgx-unparsed scope] raw)
+     :dispatch [:search-history-extend scope raw]}))
 
 (rfr/reg-sub :rgx-unparsed
   (fn [db [_ scope]]
@@ -116,7 +114,7 @@
 
   ;; compute
   (fn [[rgx-raw xlate-or-and]]
-    #_ (println :de-alias-compute!! rgx-raw xlate-or-and)
+    #_(println :de-alias-compute!! rgx-raw xlate-or-and)
     (when rgx-raw
       (if xlate-or-and
         (str/replace (str/replace rgx-raw #"\sand\s" " && ") #"\sor\s" " || ")
@@ -130,7 +128,7 @@
 
   ;; compute
   (fn [signals]
-    #_ (println :sigs signals)
+    #_(println :sigs signals)
     (let [[rgx-normal match-case] signals]
       ;;(println :rgx-normal rgx-normal (type rgx-normal) (type (js->clj rgx-normal)))
       (when rgx-normal
@@ -158,11 +156,11 @@
                        (str/split or-term #"&&")))))
             or-terms))))))
 
-
 (rfr/reg-event-db :search-history-extend
   (fn [db [_ scope raw]]
-    #_ (println :new-hist!!!!!! scope raw)
+    #_(println :new-hist!!!!!! scope raw)
     (update-in db [:search-history scope] conj raw)))
+
 (rfr/reg-sub :search-history
   (fn [db [_ prop]]
     ;;(println :sub-runs! hn-id (get-in db [:show-job-details hn-id]))
@@ -175,7 +173,6 @@
 (defn mk-full-rgx []
   ^{:key "full"}
   [mk-listing-rgx :full "Full Listing" "title and listing"])
-
 
 (defn mk-regex-search []
   (fn []
